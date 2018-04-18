@@ -52,12 +52,67 @@ public class Board{
 	}
 	/*
 		This method checks to see if there is a win, and if so, sets the 
-		winner String to either "red" or "black" depending on who wins.
+		winner String to either "red" or "black" depending on if the input color wins.
+
+		@params: A String, color, representing the color we are checking for a win.
 
 		@return: a boolean set to true if there is a winner, and false otherwise.
 	*/
-	public boolean won(){
-		
+	public boolean won(String color){
+
+		//int arrays to keep track of the horizontal and vertical # of pieces in a row
+		int[] colCount = new int[this.width];
+		int[] rowCount = new int[this.height];
+
+		//Cycle through all elements
+		for(int i = 0; i < this.height; i++){
+			for(int j = 0; j < this.width; j++){
+				if(this.board[i][j].equals(color)){
+					//mark up arrays
+					colCount[j]++;
+					rowCount[i]++;
+
+					//Check to see if there is a win
+					if(rowCount[i] == 4 || colCount[j] == 4){
+						this.winner = color
+						return true;
+					}
+					int diagCounter = 0;
+					//check downwards diagnol right
+					for(int k = i, l = j; k < this.height && l < this.width; k++, l++){
+						if(this.board[k][l].equals(color)){
+							diagCounter++;
+							if(diagCounter == 4){
+								this.winner = color;
+								return true;
+							}
+						}
+						else{
+							break;
+						}
+					}
+					diagCounter = 0;
+					//check downwards diagnol left
+					for(int k = i, l = j; k >= 0 && l >= 0; k++, l++){
+						if(board[k][k].equals(color)){
+							diagCounter++;
+							if(diagCounter == 4){
+								this.winner = color;
+								return true;
+							}
+						}
+						else{
+							break;
+						}
+					}
+				}
+				else{
+					colCount[j] = 0;
+					rowCount[i] = 0;
+				}
+			}
+		}
+		return false;
 	}
 	/*
 		Checks to see if the 2D board array is fully occupied (no empty String entries)
@@ -65,15 +120,27 @@ public class Board{
 		@return: true if the board is full, false otherwise
 	*/
 	public boolean isFull(){
-
+		for(int i = 0; i < this.height; i++){
+			for(int j = 0; j < this.width; j++){
+				if(this.board[i][j].equals("")){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	/*
 		Checks to see if the current column is full
 
 		@return true if the column is full, false otherwise
 	*/
-	public boolean isColFull(int col){
-
+	public boolean colIsFull(int col){
+		for(int i = 0; i < this.height; i++){
+			if(this.board[i][col].equals("")){
+				return false;
+			}
+		}
+		return true;
 	}
 	/*
 		Adds a token to the column selected by the user if able.
@@ -84,6 +151,24 @@ public class Board{
 		@return a boolean set to true if the add is successful, false otherwise.
 	*/
 	public boolean addToken(String color, int col){
-
+		if(colIsFull(col)){
+			return false;
+		}
+		else{
+			for(int i = 0; i < this.height; i++){
+				if(i < this.height-1){
+					if(!this.board[i+1][col].equals(""){
+						this.board[i][col] = color;
+						return true;
+						break;
+					}
+				}
+				else{
+					this.board[i][col] = color;
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
