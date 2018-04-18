@@ -39,11 +39,11 @@ public class Board{
 		@return: a boolean set to true if the game is over, and false if otherwise.
 	*/
 	public boolean gameOver(){
-		if(!this.won() && this.isFull()){
+		if(!this.won("red") && !this.won("black") && this.isFull()){
 			this.winner = "tie";
 			return true;
 		}
-		else if(this.won()){
+		else if(this.won("red") || this.won("black")){
 			return true;
 		}
 		else{
@@ -74,7 +74,7 @@ public class Board{
 
 					//Check to see if there is a win
 					if(rowCount[i] == 4 || colCount[j] == 4){
-						this.winner = color
+						this.winner = color;
 						return true;
 					}
 					int diagCounter = 0;
@@ -157,10 +157,9 @@ public class Board{
 		else{
 			for(int i = 0; i < this.height; i++){
 				if(i < this.height-1){
-					if(!this.board[i+1][col].equals(""){
+					if(!this.board[i+1][col].equals("")){
 						this.board[i][col] = color;
 						return true;
-						break;
 					}
 				}
 				else{
